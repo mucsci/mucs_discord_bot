@@ -36,11 +36,10 @@ class FootballTossCog(commands.Cog):
 	@commands.command(
 		name='throw',
 		description='Throw something to another user',
-		aliases=['tossfootball','throwfootball','throwball','tossball','footballtoss','footballthrow','ballthrow','balltoss'],
-		usage='<mention> [<item>]'
+		aliases=['throws'],
+		usage='<mention> [item=:football:] [action=throw]'
 	)
-	async def throw(self, ctx, receiver: discord.Member, item=':football:'):
-
+	async def throw(self, ctx, receiver: discord.Member, item=':football:', action="throw"):
 		async def add_one (n):
 			await self.store.set(n, await self.store.get(n, 0) + 1)
 
@@ -59,21 +58,21 @@ class FootballTossCog(commands.Cog):
 		thrower = ctx.author
 		count = await self._get_count(ctx, thrower)
 		if not str(thrower.top_role) == 'admins' and count == 0:
-			await ctx.send(f'{thrower.mention} can\'t throw something they don\'t have')
+			await ctx.send(f'{thrower.mention} can\'t {action} something they don\'t have')
 			await add_one ('total_fails')
 		else:
 			if str(thrower.top_role) != 'admins':
 				await remove_role(thrower, count)
 				await add_role(thrower, count - 1)
 			if receiver.bot:
-				await ctx.send(f'{thrower.mention} just tried to throw something at a bot')
+				await ctx.send(f'{thrower.mention} just tried to {action} something at a bot')
 				await add_one ('total_fails')
 			else:
 				count = await self._get_count(ctx, receiver)
 				if str(receiver.top_role) != 'admins':
 					await remove_role(receiver, count)
 					await add_role(receiver, count + 1)
-				await ctx.send(f'{thrower.mention} throws a {item} at {receiver.mention}')
+				await ctx.send(f'{thrower.mention} {action}s a {item} at {receiver.mention}')
 				await add_one ('total_throws')
 		await self._update_status()
 		return

@@ -53,8 +53,6 @@ class CDOBotCog(commands.Cog):
 			return	 
 		if "todd" in message.content.lower():
 			await message.channel.send("Happy Birthday Todd!!!!!")
-		if "nasa" in message.content.lower():
-			await message.channel.send("https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Great_tit_side-on.jpg/1200px-Great_tit_side-on.jpg")
 
 
 def setup(bot):

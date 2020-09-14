@@ -15,7 +15,7 @@ class FootballTossCog(commands.Cog):
 		
 	async def _get_count(self, ctx, user):
 		user_roles = user.roles
-		football_roles = [discord.utils.get(ctx.guild.roles, name=self._name_for(count)) for count in range(1,FootballTossCog.limit)]
+		football_roles = [discord.utils.get(ctx.guild.roles, name=self._name_for(count)) for count in range(1,FootballTossCog.limit + 1)]
 		for role in user_roles:
 			try:
 				return 1 + football_roles.index(role)

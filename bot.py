@@ -10,4 +10,5 @@ if __name__ == '__main__':
 	bot.load_extension('cogs.football_toss')
 	bot.load_extension('cogs.cdo_bot')
 	bot.load_extension('cogs.emote_reactor')
+	bot.load_extension('cogs.poll')
 	bot.run(os.environ['DISCORD_TOKEN'])

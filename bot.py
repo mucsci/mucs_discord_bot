@@ -11,4 +11,5 @@ if __name__ == '__main__':
 	bot.load_extension('cogs.cdo_bot')
 	bot.load_extension('cogs.emote_reactor')
 	bot.load_extension('cogs.poll')
+	bot.load_extension('cogs.anon_post')
 	bot.run(os.environ['DISCORD_TOKEN'])

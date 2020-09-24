@@ -1,12 +1,14 @@
 import discord
 from discord.ext import commands
 import asyncio
+import os
 
 class WordDetectorCog(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.lock = asyncio.Lock()
 		self.filename = '.wordfilter'
+		self.report_channel_id = os.environ['DISCORD_WORD_DETECTOR_CHANNEL_ID']
 	
 	@commands.Cog.listener()
 	async def on_message(self, message):
@@ -14,8 +16,13 @@ class WordDetectorCog(commands.Cog):
 			with open(self.filename, 'r') as readfile:
 				words = [line.strip() for line in readfile.readlines()]
 			for w in words:
-				if w.lower() in message.content.lower():
-					await message.delete()
+				if w.lower() in ''.join(message.content.lower().split()):
+					ctx = await self.bot.get_context(message)
+					special_channel = await self.bot.fetch_channel(self.report_channel_id)
+					if not message.author.bot:
+						await special_channel.send(f'**{str(ctx.author)} said:** {str(ctx.message.content)}')
+					if ctx.channel != special_channel:
+						await message.delete()
 					if not message.author.bot:
 						await message.author.send('Illegal word(s), message deleted', delete_after=30.0)
 					return

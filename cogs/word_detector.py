@@ -17,7 +17,7 @@ class WordDetectorCog(commands.Cog):
 				if w.lower() in message.content.lower():
 					await message.delete()
 					if not message.author.bot:
-						await message.author.send('Illegal word, message deleted', delete_after=30.0)
+						await message.author.send('Illegal word(s), message deleted', delete_after=30.0)
 					return
 	
 	@commands.command(
@@ -26,7 +26,7 @@ class WordDetectorCog(commands.Cog):
 		usage='addfilter <word1> [<word2>] ...'
 	)
 	async def addfilter(self, ctx, *words):
-		found_duplicate = False
+		await ctx.message.delete()
 		if str(ctx.author.top_role) != 'admins':
 			await ctx.author.send('This command is for admins only', delete_after=30.0)
 			return
@@ -39,10 +39,6 @@ class WordDetectorCog(commands.Cog):
 						appendfile.write(word + '\n')
 					else:
 						await ctx.author.send('Duplicate word not added to filter')
-						found_duplicate = True
-		if not found_duplicate:
-			await ctx.message.delete()
-
 
 	@commands.command(
 		name = 'removefilter',
@@ -50,7 +46,6 @@ class WordDetectorCog(commands.Cog):
 		usage='removefilter <word1> [<word2>] ...'
 	)
 	async def removefilter(self, ctx, *words):
-		await ctx.message.delete()
 		if str(ctx.author.top_role) != 'admins':
 			await ctx.author.send('This command is for admins only', delete_after=30.0)
 			return
@@ -61,6 +56,7 @@ class WordDetectorCog(commands.Cog):
 				for line in lines:
 					if line not in words:
 						writefile.write(line + '\n')
-
+		await ctx.message.delete()
+		
 def setup(bot):
 	bot.add_cog(WordDetectorCog(bot))

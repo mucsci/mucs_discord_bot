@@ -35,12 +35,12 @@ class WordDetectorCog(commands.Cog):
 			if ctx.channel == special_channel:
 				return
 			msg_words = set(message.content.lower().split())
-			filtered = msg_words - self.words
-			bad = msg_words - filtered
+			bad = msg_words & self.words
 			if bad:
+				list_of_words = ', '.join(bad)
 				await message.delete()
-				await special_channel.send(f'**{str(ctx.author)} said {str(bad)}:** {str(ctx.message.content)}')
-				await message.author.send(f'Illegal word(s) in message: {str(bad)} -- message deleted', delete_after=30.0)
+				await special_channel.send(f'**{str(ctx.author)} said "{list_of_words}":** {str(ctx.message.content)}')
+				await message.author.send(f'Illegal word(s) in message: "{list_of_words}" -- message deleted', delete_after=30.0)
 				
 	@commands.command(
 		name = 'addfilter',

@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from utils.fileresource import FileBackedResource
 import asyncio
 
 class WordDetectorCog(commands.Cog):

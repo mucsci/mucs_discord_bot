@@ -17,7 +17,7 @@ class WordDetectorCog(commands.Cog):
 			for w in words.readlines():
 				if w.strip() in message.content.lower():
 					await message.delete()
-					if w == ':b:' or w == ':regional_indicator_b':
+					if w == ':b:' or w == ':regional_indicator_b:':
 						await message.author.send('lol', delete_after=10.0)
 					else:
 						await message.author.send('Illegal word, message deleted', delete_after=10.0)

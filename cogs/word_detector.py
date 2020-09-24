@@ -9,61 +9,64 @@ class WordDetectorCog(commands.Cog):
 		self.lock = asyncio.Lock()
 		self.filename = '.wordfilter'
 		self.report_channel_id = os.environ['DISCORD_WORD_DETECTOR_CHANNEL_ID']
+		with open(self.filename, 'r') as readfile:
+			self.words = set(line.strip() for line in readfile.readlines())
+	
+	async def _add(self, words):
+		new_words = set(words)
+		with open(self.filename, 'a') as appendFile:
+			for w in new_words - self.words:
+				appendFile.write(f"{w}\n")
+		self.words += new_words
+		
+	async def _remove(self, words):
+		self.words -= set(words)
+		with open(self.filename, 'w') as writefile:
+			for w in self.words:
+				writefile.write (f"{w}\n")
 	
 	@commands.Cog.listener()
 	async def on_message(self, message):
 		async with self.lock:
-			with open(self.filename, 'r') as readfile:
-				words = [line.strip() for line in readfile.readlines()]
-			for w in words:
-				if w.lower() in ''.join(message.content.lower().split()):
-					ctx = await self.bot.get_context(message)
-					special_channel = await self.bot.fetch_channel(self.report_channel_id)
-					if not message.author.bot:
-						await special_channel.send(f'**{str(ctx.author)} said:** {str(ctx.message.content)}')
-					if ctx.channel != special_channel:
-						await message.delete()
-					if not message.author.bot:
-						await message.author.send('Illegal word(s), message deleted', delete_after=30.0)
-					return
-	
+			if message.author.bot:
+				return
+			ctx = await self.bot.get_context(message)
+			special_channel = await self.bot.fetch_channel(self.report_channel_id)
+			if ctx.channel == special_channel:
+				return
+			msg_words = set(message.content.lower().split())
+			filtered = msg_words - self.words
+			bad = msg_words - filtered
+			if bad:
+				await message.delete()
+				await special_channel.send(f'**{str(ctx.author)} said {str(bad)}:** {str(ctx.message.content)}')
+				await message.author.send(f'Illegal word(s) in message: {str(bad)} -- message deleted', delete_after=30.0)
+				
 	@commands.command(
 		name = 'addfilter',
 		description = 'Add a word that messages should not contain. (Command is for admins only)',
 		usage='addfilter <word1> [<word2>] ...'
 	)
 	async def addfilter(self, ctx, *words):
-		await ctx.message.delete()
-		if str(ctx.author.top_role) != 'admins':
-			await ctx.author.send('This command is for admins only', delete_after=30.0)
-			return
 		async with self.lock:
-			with open(self.filename, 'r') as readfile:
-				lines = [line.strip() for line in readfile.readlines()]
-			with open(self.filename, 'a') as appendfile:
-				for word in words:
-					if word not in lines:
-						appendfile.write(word + '\n')
-					else:
-						await ctx.author.send('Duplicate word not added to filter')
-
+			await ctx.message.delete()
+			if str(ctx.author.top_role) != 'admins':
+				await ctx.author.send('This command is for admins only', delete_after=30.0)
+				return
+			await self._add(w.lower() for w in words)
+		
 	@commands.command(
 		name = 'removefilter',
 		description = 'Remove a word from the current filter (Command is for admins only)',
 		usage='removefilter <word1> [<word2>] ...'
 	)
 	async def removefilter(self, ctx, *words):
-		if str(ctx.author.top_role) != 'admins':
-			await ctx.author.send('This command is for admins only', delete_after=30.0)
-			return
 		async with self.lock:
-			with open(self.filename, 'r') as readfile:
-				lines = [line.strip() for line in readfile.readlines()]
-			with open(self.filename, 'w') as writefile:
-				for line in lines:
-					if line not in words:
-						writefile.write(line + '\n')
-		await ctx.message.delete()
-		
+			await ctx.message.delete()
+			if str(ctx.author.top_role) != 'admins':
+				await ctx.author.send('This command is for admins only', delete_after=30.0)
+				return
+			await self._remove(w.lower() for w in words)
+
 def setup(bot):
 	bot.add_cog(WordDetectorCog(bot))

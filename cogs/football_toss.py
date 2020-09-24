@@ -40,7 +40,7 @@ class FootballTossCog(commands.Cog):
 		aliases=['throws', 'toss'],
 		usage='[item=:football:] <mention>'
 	)
-	async def throw(self, ctx, item : typing.Optional[discord.Emoji] = ":football:", *, receiver: discord.Member):
+	async def throw(self, ctx, item : typing.Optional[str] = ":football:", *, receiver: discord.Member):
 		async def add_one (n):
 			await self.store.set(n, await self.store.get(n, 0) + 1)
 
@@ -58,6 +58,7 @@ class FootballTossCog(commands.Cog):
 			return
 		thrower = ctx.author
 		count = await self._get_count(ctx, thrower)
+		action = 'throw'
 		if not str(thrower.top_role) == 'admins' and count == 0:
 			await ctx.send(f'{thrower.mention} can\'t {action} something they don\'t have')
 			await add_one ('total_fails')

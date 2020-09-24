@@ -1,4 +1,5 @@
 import discord
+import typing
 from discord.ext import commands
 from utils.fileresource import FileBackedResource
 
@@ -36,10 +37,10 @@ class FootballTossCog(commands.Cog):
 	@commands.command(
 		name='throw',
 		description='Throw something to another user',
-		aliases=['throws'],
-		usage='<mention> [item=:football:] [action=throw]'
+		aliases=['throws', 'toss'],
+		usage='[item=:football:] <mention>'
 	)
-	async def throw(self, ctx, receiver: discord.Member, item=':football:', action="throw"):
+	async def throw(self, ctx, item : typing.Optional[discord.Emoji] = ":football:", *, receiver: discord.Member):
 		async def add_one (n):
 			await self.store.set(n, await self.store.get(n, 0) + 1)
 

@@ -15,5 +15,3 @@ if __name__ == '__main__':
 	bot.load_extension('cogs.word_detector')
 	bot.load_extension('cogs.moderation')
 	bot.run(os.environ['DISCORD_TOKEN'])
-
-hi

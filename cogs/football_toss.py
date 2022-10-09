@@ -74,7 +74,7 @@ class FootballTossCog(commands.Cog):
 				await add_one ('total_fails')
 			else:
 				count = await self._get_count(ctx, receiver)
-				if thrower.top_role.id not in privileged_throwers:
+				if receiver.top_role.id not in privileged_throwers:
 					await remove_role(receiver, count)
 					await add_role(receiver, count + 1)
 				await ctx.send(f'{thrower.mention} {action}s a {item} at {receiver.mention}')

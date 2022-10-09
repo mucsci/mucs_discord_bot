@@ -59,12 +59,14 @@ class FootballTossCog(commands.Cog):
 		thrower = ctx.author
 		count = await self._get_count(ctx, thrower)
 		action = 'throw'
-		privileged_throwers = ['admins', 'moderators']
-		if str(thrower.top_role) not in privileged_throwers and count == 0:
+		admin=736216045857144892
+		mod=736216473009258497
+		privileged_throwers = [admin, mod]
+		if stthrower.top_role.id not in privileged_throwers and count == 0:
 			await ctx.send(f'{thrower.mention} can\'t {action} something they don\'t have')
 			await add_one ('total_fails')
 		else:
-			if str(thrower.top_role) not in privileged_throwers:
+			if thrower.top_role.id not in privileged_throwers:
 				await remove_role(thrower, count)
 				await add_role(thrower, count - 1)
 			if receiver.bot:
@@ -72,7 +74,7 @@ class FootballTossCog(commands.Cog):
 				await add_one ('total_fails')
 			else:
 				count = await self._get_count(ctx, receiver)
-				if str(receiver.top_role) not in privileged_throwers:
+				if thrower.top_role.id not in privileged_throwers:
 					await remove_role(receiver, count)
 					await add_role(receiver, count + 1)
 				await ctx.send(f'{thrower.mention} {action}s a {item} at {receiver.mention}')

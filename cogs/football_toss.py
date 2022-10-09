@@ -62,7 +62,7 @@ class FootballTossCog(commands.Cog):
 		admin=736216045857144892
 		mod=736216473009258497
 		privileged_throwers = [admin, mod]
-		if stthrower.top_role.id not in privileged_throwers and count == 0:
+		if thrower.top_role.id not in privileged_throwers and count == 0:
 			await ctx.send(f'{thrower.mention} can\'t {action} something they don\'t have')
 			await add_one ('total_fails')
 		else:

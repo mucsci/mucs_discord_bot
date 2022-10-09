@@ -68,5 +68,5 @@ class EmoteReactorCog(commands.Cog):
 			await ctx.author.send("the reaction string cannot be represented using the characters specified", delete_after=30.0)
 		return
 
-def setup(bot):
-	bot.add_cog(EmoteReactorCog(bot))
+async def setup(bot):
+	await bot.add_cog(EmoteReactorCog(bot))

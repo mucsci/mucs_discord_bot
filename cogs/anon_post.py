@@ -20,5 +20,5 @@ class AnonPostCog(commands.Cog):
 		except:
 			await ctx.author.send("You can only post anonymously in course rooms", delete_after=30.0)
 
-def setup(bot):
-	bot.add_cog(AnonPostCog(bot))
+async def setup(bot):
+	await bot.add_cog(AnonPostCog(bot))

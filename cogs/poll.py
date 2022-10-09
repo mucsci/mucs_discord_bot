@@ -72,5 +72,5 @@ class PollCog(commands.Cog):
         await poll_message.clear_reactions()
         await poll_message.edit(content=(f"{ctx.message.author.mention}"), embed=end_poll_embed)
 
-def setup(bot):
-    bot.add_cog(PollCog(bot))
+async def setup(bot):
+    await bot.add_cog(PollCog(bot))

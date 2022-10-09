@@ -55,5 +55,5 @@ class CDOBotCog(commands.Cog):
 			await message.channel.send("Happy Birthday Todd!!!!!")
 
 
-def setup(bot):
-	bot.add_cog(CDOBotCog(bot))
+async def setup(bot):
+	await bot.add_cog(CDOBotCog(bot))

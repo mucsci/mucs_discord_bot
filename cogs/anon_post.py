@@ -1,24 +1,25 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
+from utils.constants import Constants
 
 class AnonPostCog(commands.Cog):
-	def __init__(self, bot):
+
+	def __init__(self, bot: commands.Bot):
 		self.bot = bot
 	
-	@commands.command(
+	@app_commands.command(
 		name='anon',
-		description='Anonymously post to a permitted channel',
-		usage='<message>'
+		description='Anonymously post to a course channel',
 	)
-	async def anon(self, ctx):
+	async def anon(self, interaction: discord.Interaction, message: str):
 		try:
-			room = int(str(ctx.channel))
-			msg = ctx.message.clean_content
-			msg = msg.replace('!anon', '**[anonymous post]**', 1)
-			await ctx.send(msg)
-			await ctx.message.delete()
+			_ = int(str(interaction.channel.name))
+			interaction.user = self.bot.user
+			await interaction.response.send_message("Posted anonymously", delete_after=15.0, ephemeral=True)
+			await interaction.channel.send('**[anonymous post]** ' + message)
 		except:
-			await ctx.author.send("You can only post anonymously in course rooms", delete_after=30.0)
+			await interaction.response.send_message("You can only post anonymously in course channels", delete_after=15.0, ephemeral=True)
 
 async def setup(bot):
-	await bot.add_cog(AnonPostCog(bot))
+	await bot.add_cog(AnonPostCog(bot), guilds=[discord.Object(id=Constants.GUILD_ID)])

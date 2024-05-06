@@ -6,32 +6,32 @@ from utils.constants import Constants
 from discord import ui
 
 EMOTE_LOOKUP = {
-    "a": ["", "'"],
-    "b": ["", "'"],
-    "c": [""],
-    "d": [""],
-    "e": [""],
-    "f": [""],
-    "g": [""],
-    "h": [""],
-    "i": ["", "'ℹ"],
-    "j": [""],
-    "k": [""],
-    "l": [""],
-    "m": ["", "'Ⓜ"],
-    "n": [""],
-    "o": ["", "'"],
-    "p": ["", "'"],
-    "q": [""],
-    "r": [""],
-    "s": [""],
-    "t": [""],
-    "u": [""],
-    "v": [""],
-    "w": [""],
-    "x": [""],
-    "y": [""],
-    "z": [""],
+    "a": ["🇦", "🅰️"],
+    "b": ["🇧", "🅱️"],
+    "c": ["🇨"],
+    "d": ["🇩"],
+    "e": ["🇪"],
+    "f": ["🇫"],
+    "g": ["🇬"],
+    "h": ["🇭"],
+    "i": ["🇮", "ℹ️"],
+    "j": ["🇯"],
+    "k": ["🇰"],
+    "l": ["🇱"],
+    "m": ["🇲", "Ⓜ️"],
+    "n": ["🇳"],
+    "o": ["🇴", "🅾️"],
+    "p": ["🇵", "🅿️"],
+    "q": ["🇶"],
+    "r": ["🇷"],
+    "s": ["🇸"],
+    "t": ["🇹"],
+    "u": ["🇺"],
+    "v": ["🇻"],
+    "w": ["🇼"],
+    "x": ["🇽"],
+    "y": ["🇾"],
+    "z": ["🇿"],
     "1": ["1️⃣"],
     "2": ["2️⃣"],
     "3": ["3️⃣"],
@@ -57,8 +57,8 @@ class ReactorString(ui.Modal, title="Emote Reactor"):
         emotes = []
         try:
             for c in self.reactor.value:
-                counts[c] += 1
                 emotes.append(EMOTE_LOOKUP[c][counts[c]])
+                counts[c] += 1
             reactions = [self.message.add_reaction(e) for e in emotes]
             await interaction.response.send_message(
                 "Successfully added emote reaction",
@@ -70,7 +70,7 @@ class ReactorString(ui.Modal, title="Emote Reactor"):
                 await r
         except Exception as e:
             await interaction.response.send_message(
-                f"the reaction string cannot be represented using the characters specified",
+                f"the reaction string cannot be represented using the characters specified {e}",
                 delete_after=15.0,
                 ephemeral=True,
             )
@@ -97,4 +97,3 @@ class EmoteReact(commands.Cog):
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(EmoteReact(bot))
-    

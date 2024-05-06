@@ -69,4 +69,5 @@ class WordDetectorCog(commands.Cog):
 			await self._remove(w.lower() for w in words)
 
 async def setup(bot):
-	await bot.add_cog(WordDetectorCog(bot))
+	pass
+	# await bot.add_cog(WordDetectorCog(bot))
